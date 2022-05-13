@@ -1,0 +1,9 @@
+{
+  "name": "Get Song Info",
+  "description": "Gets Song Info",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  }
+}

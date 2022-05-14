@@ -1,5 +1,4 @@
 function fetchData(){
-    console.log('Default background color set to ...');
     
     let active_song = document.getElementsByClassName("active-song")[0];
     //let album_art = getElementsByClassName("album-art")[0].style.backgroundImage;

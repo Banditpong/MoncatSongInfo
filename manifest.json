@@ -1,9 +1,16 @@
 {
-  "name": "Get Song Info",
+  "name": "MoncatSongInfo Extension",
   "description": "Gets Song Info",
-  "version": "1.0",
   "manifest_version": 3,
-  "background": {
-    "service_worker": "background.js"
-  }
+  "version": "1.0","permissions": ["storage", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["https://*.monstercat.app/*"],
+      "js": ["background.js"]
+    }
+  ],
+  "action" : {
+      "default_popup" : "popup.html"
+  },
+  "options_page": "options.html"
 }

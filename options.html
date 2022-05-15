@@ -8,10 +8,14 @@
     </div>
     <div>
       <p>Set OBS-Websocket Info</p>
-    </div>
-    <label>IP</label>
-    <label>PORT NUMBER</label>
-    <label>PASSWORD</label>
+    </div><div style="width:200px">
+    <label for="ip_address">IP Address: </label><input type="text" id="ip_addr" name="ip_address"><br/>
+    <label for="ip_portnum">Port Number: </label><input type="text" id="ip_port" name="ip_portnum"><br/>
+    <label for="password">Password: </label><input type="text" id="pass" name="password"><br/>
+    
+    <div id="status"></div><button id="save">Save Options</button>
+
+  </div>
     <script src="options.js"></script>
   </body>
 </html>

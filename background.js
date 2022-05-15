@@ -1,9 +1,16 @@
+function html2text(item){
+    const parser = new DOMParser();
+    const doc1 = parser.parseFromString(item, 'text/html');
+    return doc1.documentElement.textContent ;
+}
+
+
 function fetchData(){
     
     let active_song = document.getElementsByClassName("active-song")[0];
-    //let album_art = getElementsByClassName("album-art")[0].style.backgroundImage;
+    //let album_art = active_song.getElementsByClassName("album-art")[0].style.backgroundImage;
     //let song_title = active_song.getElementsByClassName("song-title")[0].innerText;
-    let song_title = active_song.getElementsByClassName("cursor-pointer release-link")[0].getInnerHTML().match("^(.*?)<")[1]
+    let song_title = html2text(active_song.getElementsByClassName("cursor-pointer release-link")[0].getInnerHTML().match("^(.*?)<")[1]);
     let artist_list = Array.from(active_song.querySelector('.artists-list').children, ({textContent}) => textContent.trim()).filter(Boolean).join(', ');
     //chrome.storage.local.set({ "active_song": active_song });
     chrome.storage.local.set({ "song_title": song_title });

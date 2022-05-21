@@ -5,3 +5,6 @@ chrome.storage.local.get("song_title", function(result) {
 chrome.storage.local.get("artist_list", function(result) {
     document.getElementById('artist').innerText = result.artist_list;
 });
+
+chrome.storage.local.set({ "song_title": ""});
+chrome.storage.local.set({ "artist_list": ""});

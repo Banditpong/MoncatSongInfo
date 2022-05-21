@@ -1,39 +1,47 @@
 function html2text(item){
     const parser = new DOMParser();
     const doc1 = parser.parseFromString(item, 'text/html');
-    return doc1.documentElement.textContent ;
+    return doc1.documentElement.textContent;
 }
+var current_song = "nothing";
+var observer = new MutationObserver(function(mutations){
+    for(var mutation of mutations) {
+        let active_song = document.getElementsByClassName("active-song")[0];
+        let song_title = html2text(active_song.getElementsByClassName("cursor-pointer release-link")[0].getInnerHTML().match("^(.*?)<")[1]);
+        if (active_song != song_title){  
+            current_song = song_title;
+            let artist_list = Array.from(active_song.querySelector('.artists-list').children, ({textContent}) => textContent.trim()).filter(Boolean).join(', ');
+            chrome.storage.local.set({ "song_title": song_title });
+            chrome.storage.local.set({ "artist_list": artist_list });
+            obs.send("SetSourceSettings", {
+                sourceName : "song_artist" ,
+                sourceSettings: {
+                text: artist_list
+            }
+            }).catch(err => { 
+                console.log(err);
+            });
 
-
-function fetchData(){
-    
-    let active_song = document.getElementsByClassName("active-song")[0];
-    //let album_art = active_song.getElementsByClassName("album-art")[0].style.backgroundImage;
-    //let song_title = active_song.getElementsByClassName("song-title")[0].innerText;
-    let song_title = html2text(active_song.getElementsByClassName("cursor-pointer release-link")[0].getInnerHTML().match("^(.*?)<")[1]);
-    let artist_list = Array.from(active_song.querySelector('.artists-list').children, ({textContent}) => textContent.trim()).filter(Boolean).join(', ');
-    //chrome.storage.local.set({ "active_song": active_song });
-    chrome.storage.local.set({ "song_title": song_title });
-    chrome.storage.local.set({ "artist_list": artist_list });
-    
-    obs.send("SetSourceSettings", {
-        sourceName : "song_artist" ,
-        sourceSettings: {
-        text: artist_list
+            obs.send("SetSourceSettings", {
+            sourceName : "song_title" ,
+            sourceSettings: {
+            text: song_title
+            }
+            }).catch(err => { 
+            console.log(err);
+            })
         }
-    }).catch(err => { 
-        console.log(err);
-    });
+    }
+  });
 
-    obs.send("SetSourceSettings", {
-        sourceName : "song_title" ,
-        sourceSettings: {
-        text: song_title
-        }
-    }).catch(err => { 
-        console.log(err);
-    });
-}
+// Start observing the target node for configured mutations
+var observerTarget = document.getElementsByClassName("active-song")[0].getElementsByClassName("song-info")[0].querySelector('.song-title');
+observer.observe(observerTarget, {
+    attributes: true,
+    characterData: true,
+    childList: true,
+    subtree: true
+});
 
 const obs = new OBSWebSocket();
 
@@ -62,8 +70,3 @@ chrome.storage.local.get([
 obs.on('error', err => {
     console.error('socket error:', err);
 });
-
-let active_song = document.getElementsByClassName("active-song")[0];
-//active_song.getElementsByClassName("song-title")[0].getElementsByClassName("scroll-item")[0].firstChild.children[0].remove()
-
-setInterval(fetchData, 5000);
